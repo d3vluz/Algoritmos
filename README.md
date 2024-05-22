@@ -1,4 +1,4 @@
-# Metodos-de-ordenacao
+# Metodos de Ordenacao
 > REPOSITÓRIO EM DESENVOLVIMENTO
 
 Este repositório contém implementações e análise de diversos métodos de ordenação em Python, desenvolvidas para fins de estudo na cadeira "Construção e Análise de Algoritmos".
