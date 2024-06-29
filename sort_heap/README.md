@@ -6,7 +6,7 @@ O algoritmo Heap Sort é um algoritmo de ordenação baseado em comparação que
 
 ## Notação Assintótica
 |            | Melhor Caso                                 | Pior Caso                                  | Caso Médio                                |
-|------------|---------------------------------------------|---------------------------------------------|--------------------------------------------|
+| :-------: | :------------------------------------------: | :------------------------------------------: | :------------------------------------------: |
 | Descrição | A lista já está ordenada como um heap.     | A lista está em ordem inversa.             | A lista está em ordem aleatória.           |
 | Comportamento | O algoritmo realiza menos comparações.     | O algoritmo realiza o máximo de comparações. | O algoritmo tem um desempenho intermediário. |
 | Comparações| O(n log n)                                  | O(n log n)                                  | O(n log n)                                 |
