@@ -22,9 +22,9 @@ O algoritmo Heap Sort é um algoritmo de ordenação baseado em comparação que
 + **Menos Eficaz que o Quick Sort em Média:** Embora o Heap Sort tenha um limite superior garantido de O(n log n), ele geralmente é menos eficaz que o Quick Sort em cenários de caso médio.
 
 ## Fontes para Estudo
-+ **Khan Academy:** [https://www.khanacademy.org/computing/computer-science/algorithms/heap-sort/a/overview-of-heap-sort]
-+ **GeeksforGeeks:** [https://www.geeksforgeeks.org/heap-sort/]
-+ **Programiz:** [https://www.programiz.com/dsa/heap-sort]
++ [GeeksforGeeks](https://www.geeksforgeeks.org/heap-sort/)
++ [Programiz](https://www.programiz.com/dsa/heap-sort)
++ [Youtube](https://www.youtube.com/watch?v=2DmK_H7IdTo)
 
 ## Considerações
 O Heap Sort é uma boa escolha para ordenação quando a previsibilidade do tempo de execução é crucial e o conjunto de dados é grande. No entanto, ele pode não ser a melhor escolha para conjuntos de dados pequenos ou quando a estabilidade da ordenação é importante.
