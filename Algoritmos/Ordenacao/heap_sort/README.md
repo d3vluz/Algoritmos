@@ -1,72 +1,82 @@
-# Algoritmo Heap Sort
-## Descrição
-O Heap Sort é um algoritmo de ordenação baseado em comparação que utiliza a estrutura de dados Heap (ou árvore binária de prioridades) para ordenar elementos. O algoritmo funciona em duas fases principais:
+# Heap Sort: O Algoritmo da Árvore
 
-1. **Construção do Heap:** Transforma a lista desordenada em um heap máximo, onde o maior elemento está sempre na raiz (posição 0 do array). Esta construção começa a partir do último nó não-folha e vai subindo até a raiz, garantindo que cada nó pai seja maior que seus filhos.
+## O que é o Heap Sort?
+O Heap Sort é um algoritmo de ordenação que utiliza uma estrutura especial chamada "heap" (árvore binária). É como construir uma pirâmide onde cada elemento pai é sempre maior que seus filhos, garantindo que o maior valor sempre fique no topo da pirâmide.
 
-2. **Extração do Heap:** Remove o maior elemento (a raiz) repetidamente, colocando-o na posição correta da lista ordenada (ao final). Após cada remoção, reconstrói o heap com os elementos restantes para manter a propriedade de heap máximo.
+## Como funciona na prática?
 
-A estrutura do heap é representada como uma árvore binária, mas é implementada como um array, onde para qualquer nó na posição `i`:
-- O filho esquerdo está na posição `2*i + 1`
-- O filho direito está na posição `2*i + 2`
-- O pai está na posição `(i-1) // 2`
+Imagine que você precisa organizar um grupo de pessoas por altura, do mais baixo para o mais alto:
 
-## História Prática do Heap Sort
+1. **Construção da pirâmide (heap):**
+   - Organizamos todas as pessoas em uma formação especial (pirâmide)
+   - Garantimos que cada pessoa seja mais alta que as duas pessoas abaixo dela
+   - Ao final, a pessoa mais alta estará no topo da pirâmide
 
-Imagine uma competição esportiva onde vários atletas estão competindo em uma prova de força. A organização precisa ordenar os atletas do mais forte ao mais fraco para a premiação.
+2. **Ordenação:**
+   - Removemos a pessoa do topo (a mais alta) e a colocamos na posição final da fila
+   - Reorganizamos a pirâmide para que a segunda pessoa mais alta fique no topo
+   - Repetimos até que todas as pessoas estejam organizadas do mais baixo para o mais alto
 
-Primeiro, precisamos organizar todos os atletas em uma estrutura especial. Essa estrutura é como uma pirâmide humana, onde cada "nível" da pirâmide segue uma regra: cada pessoa deve ser mais forte que as pessoas que estão abaixo dela, apoiadas em seus ombros. No topo da pirâmide fica o atleta mais forte de todos.
+## Exemplo visual
+```
+Lista inicial: [4, 10, 3, 5, 1]
 
-Para construir essa pirâmide (fase de "construção do heap"):
+1. Construção do heap:
+   [4, 10, 3, 5, 1] → [10, 5, 3, 4, 1]
+   
+   Representação em árvore:
+        10
+       /  \
+      5    3
+     / \
+    4   1
 
-1. Começamos colocando os atletas em posições aleatórias na pirâmide.
-2. Depois, começando do meio da pirâmide e indo até o topo, verificamos se cada atleta é mais forte que os dois atletas abaixo dele.
-3. Se encontrarmos um atleta que é mais fraco que alguém abaixo dele, trocamos suas posições e verificamos se a nova configuração ainda mantém a regra para os níveis inferiores.
-4. Quando terminamos, o atleta mais forte estará no topo da pirâmide.
+2. Extração e ordenação:
+   - Troca o 10 (raiz) com o 1 (último): [1, 5, 3, 4, 10]
+   - Reorganiza sem considerar o 10: [5, 4, 3, 1, 10]
+   
+   - Troca o 5 (raiz) com o 1 (último): [1, 4, 3, 5, 10]
+   - Reorganiza sem considerar o 5 e 10: [4, 1, 3, 5, 10]
+   
+   - Troca o 4 (raiz) com o 3 (último): [3, 1, 4, 5, 10]
+   - Reorganiza sem considerar o 4, 5 e 10: [3, 1, 4, 5, 10]
+   
+   - Troca o 3 (raiz) com o 1 (último): [1, 3, 4, 5, 10]
+   
+Lista ordenada: [1, 3, 4, 5, 10]
+```
 
-Para ordenar (fase de "extração do heap"):
+## Desempenho
 
-1. Sabemos que o atleta no topo é o mais forte, então o removemos e o colocamos em primeiro lugar no pódio.
-2. Agora precisamos reorganizar a pirâmide. Pegamos o último atleta da base e o movemos para o topo.
-3. Este atleta provavelmente não é o mais forte dos restantes, então precisamos "afundá-lo" na pirâmide até encontrar sua posição correta, sempre mantendo a regra de que os mais fortes ficam acima.
-4. Agora o segundo atleta mais forte está no topo. Repetimos o processo: removemos o topo, colocamos em segundo lugar no pódio, reorganizamos a pirâmide.
-5. Continuamos até que todos os atletas estejam no pódio, ordenados do mais forte para o mais fraco.
+O Heap Sort tem um desempenho consistente:
 
-Essa abordagem sistemática de construir uma estrutura especial (o heap) e então extrair elementos em ordem é o que torna o Heap Sort eficiente e previsível para qualquer conjunto de dados.
+| Situação         | Velocidade            | Espaço usado na memória |
+|:----------------:|:---------------------:|:-----------------------:|
+| Melhor caso      | Bom (O(n log n))      | Mínimo (O(1))           |
+| Caso comum       | Bom (O(n log n))      | Mínimo (O(1))           |
+| Pior caso        | Bom (O(n log n))      | Mínimo (O(1))           |
 
-## Conclusão
-O Heap Sort é um algoritmo de ordenação robusto e eficiente, com complexidade de tempo garantida de O(N log N) em todos os casos (melhor, médio e pior). A ordenação acontece "in-place", o que significa que não precisa de memória extra além da lista original, tornando-o ideal para grandes conjuntos de dados onde a memória é uma preocupação. No entanto, não é um algoritmo estável, ou seja, elementos iguais podem mudar de ordem relativa durante o processo de ordenação.
-
-## Notação Assintótica
-
-| Caso        | Complexidade de Tempo | Custo de Memória |
-|:-----------:|:---------------------:|:-----------------:|
-| Melhor Caso | O(N log N)            | O(1)             |
-| Caso Médio  | O(N log N)            | O(1)             |
-| Pior Caso   | O(N log N)            | O(1)             |
+> **Nota:** O(n log n) significa que o tempo de execução cresce de forma mais eficiente que O(n²). Se dobrarmos o tamanho da lista, o tempo não chega a dobrar completamente.
 
 ## Vantagens
-+ **Desempenho Consistente:** Complexidade de tempo O(N log N) garantida em todos os casos, sendo mais previsível que algoritmos como o Quick Sort.
-+ **Eficiência de Memória:** Realiza ordenação "in-place", utilizando apenas espaço constante O(1) de memória adicional.
-+ **Bom para Seleções Parciais:** É eficiente quando precisamos encontrar os k maiores ou menores elementos, sem ordenar a lista inteira.
++ Desempenho consistente em todos os casos
++ Não precisa de memória extra para funcionar
++ Excelente para encontrar os maiores ou menores valores de uma lista
++ Funciona bem para listas grandes
 
 ## Desvantagens
-+ **Não Estável:** Não preserva a ordem relativa de elementos iguais, o que pode ser um problema em algumas aplicações.
-+ **Desempenho Prático:** Mesmo tendo a mesma complexidade assintótica, geralmente é mais lento na prática que o Quick Sort para conjuntos de dados aleatórios.
-+ **Localidade de Cache:** Tem pior utilização de cache que algoritmos como o Quick Sort, pois acessa posições de memória mais distantes entre si.
++ Um pouco mais complexo de entender e implementar
++ Não mantém a ordem original de elementos iguais (não é estável)
++ Na prática, pode ser mais lento que outros algoritmos para listas pequenas
 
-## Fontes para Estudo
-+ [GeeksforGeeks](https://www.geeksforgeeks.org/heap-sort/)
-+ [Programiz](https://www.programiz.com/dsa/heap-sort)
-+ [YouTube](https://www.youtube.com/watch?v=2DmK_H7IdTo)
-+ [Wikipedia](https://en.wikipedia.org/wiki/Heapsort)
+## Quando usar
+O Heap Sort é ideal quando:
++ Precisamos de um algoritmo que tenha desempenho garantido e previsível
++ Memória adicional é limitada
++ Queremos encontrar os "k" maiores ou menores elementos de uma lista
++ A estabilidade (manter a ordem de elementos iguais) não é importante
 
-## Considerações Finais
-O Heap Sort é uma excelente escolha quando:
-
-- Precisamos de um algoritmo com desempenho garantido O(N log N) mesmo no pior caso.
-- A memória extra é limitada, tornando o Merge Sort menos desejável.
-- Não necessitamos preservar a ordem de elementos iguais (estabilidade).
-- Precisamos encontrar os k maiores/menores elementos de uma lista.
-
-Por outro lado, quando a estabilidade é importante ou quando estamos lidando com dados que já estão parcialmente ordenados, algoritmos como o Merge Sort ou mesmo o Insertion Sort (para pequenos conjuntos) podem ser mais apropriados.
+## Para aprender mais
++ [Visualização animada do Heap Sort](https://visualgo.net/en/sorting)
++ [GeeksforGeeks: Explicação detalhada](https://www.geeksforgeeks.org/heap-sort/)
++ [Vídeo: Heap Sort explicado](https://www.youtube.com/watch?v=2DmK_H7IdTo)
