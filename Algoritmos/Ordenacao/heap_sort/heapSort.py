@@ -4,15 +4,14 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 def heap_sort(lista):
-    tamanho_lista = len(lista)
+    tamanho = len(lista)
     
     # Fase 1: Construção do heap máximo
-    # Começamos a partir do último nó não-folha e aplicamos heapify de baixo para cima
-    for indice in range(tamanho_lista // 2 - 1, -1, -1):
-        yield from heapify(lista, tamanho_lista, indice)
+    for indice in range(tamanho // 2 - 1, -1, -1):
+        yield from heapify(lista, tamanho, indice)
     
     # Fase 2: Extrair elementos um por um do heap
-    for indice in range(tamanho_lista - 1, 0, -1):
+    for indice in range(tamanho - 1, 0, -1):
         # Troca a raiz (maior elemento) com o último elemento não ordenado
         lista[0], lista[indice] = lista[indice], lista[0]
         
@@ -26,17 +25,17 @@ def heap_sort(lista):
     yield lista, -1, -1, 0
 
 def heapify(lista, tamanho_heap, indice_raiz):
-    maior = indice_raiz  # Inicializa o maior como raiz
-    indice_filho_esquerdo = 2 * indice_raiz + 1
-    indice_filho_direito = 2 * indice_raiz + 2
+    maior = indice_raiz
+    filho_esquerdo = 2 * indice_raiz + 1
+    filho_direito = 2 * indice_raiz + 2
     
     # Verifica se o filho esquerdo existe e é maior que a raiz
-    if indice_filho_esquerdo < tamanho_heap and lista[indice_filho_esquerdo] > lista[maior]:
-        maior = indice_filho_esquerdo
+    if filho_esquerdo < tamanho_heap and lista[filho_esquerdo] > lista[maior]:
+        maior = filho_esquerdo
     
     # Verifica se o filho direito existe e é maior que o maior atual
-    if indice_filho_direito < tamanho_heap and lista[indice_filho_direito] > lista[maior]:
-        maior = indice_filho_direito
+    if filho_direito < tamanho_heap and lista[filho_direito] > lista[maior]:
+        maior = filho_direito
     
     # Se o maior não é a raiz, troca e continua a heapificar
     if maior != indice_raiz:
@@ -49,88 +48,84 @@ def heapify(lista, tamanho_heap, indice_raiz):
         yield from heapify(lista, tamanho_heap, maior)
 
 def visualizar_heap_sort(lista):
-    tamanho_lista = len(lista)
+    tamanho = len(lista)
     
     fig, ax = plt.subplots(figsize=(12, 8))
-    ax.set_title("Heap Sort")
+    ax.set_title("Visualização do Heap Sort", fontsize=14)
     
-    barras = ax.bar(range(tamanho_lista), lista, align="edge", color='royalblue', alpha=0.7)
+    barras = ax.bar(range(tamanho), lista, align="edge", color='skyblue', edgecolor='steelblue')
     
-    ax.set_xlim(0, tamanho_lista)
+    ax.set_xlim(0, tamanho)
     ax.set_ylim(0, int(1.1 * max(lista)))
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
     
-    contador_texto = ax.text(0.02, 0.95, "", transform=ax.transAxes, fontsize=12)
-
-    contador_operacoes = [0]
+    contador = ax.text(0.02, 0.95, "", transform=ax.transAxes, fontsize=12)
+    operacoes = [0]
     indices_ordenados = set()
     
-    def atualizar_grafico(dados, barras, contador_operacoes):
+    def atualizar_grafico(dados, barras, operacoes):
         lista_atual, indice1, indice2, fim_ordenado = dados
 
         for i, (barra, valor) in enumerate(zip(barras, lista_atual)):
             barra.set_height(valor)
 
-        for i in range(tamanho_lista):
+        for i in range(tamanho):
             if i >= fim_ordenado:
                 barras[i].set_color('limegreen')
                 indices_ordenados.add(i)
             elif i not in indices_ordenados:
-                barras[i].set_color('royalblue')
+                barras[i].set_color('skyblue')
 
         if indice1 != -1 and indice2 != -1:
-            barras[indice1].set_color('crimson')
-            barras[indice2].set_color('darkorange')
+            barras[indice1].set_color('red')
+            barras[indice2].set_color('red')
         
-        contador_operacoes[0] += 1
-        contador_texto.set_text(f"Número de operações: {contador_operacoes[0]}")
+        operacoes[0] += 1
+        contador.set_text(f"Operações: {operacoes[0]}")
 
-    anim = animation.FuncAnimation(
+    animacao = animation.FuncAnimation(
         fig, 
         func=atualizar_grafico, 
-        fargs=(barras, contador_operacoes), 
+        fargs=(barras, operacoes), 
         frames=heap_sort(lista), 
-        interval=200, 
+        interval=150, 
         repeat=False
     )
     
     plt.tight_layout()
     plt.show()
 
-def obter_dados_ordenacao(tamanho):
+def interface(tamanho_lista):
+    opcoes = {
+        '1': ('Lista Ordenada', lambda: list(range(1, tamanho_lista+1))),
+        '2': ('Lista Ordenada Inversamente', lambda: list(range(tamanho_lista, 0, -1))),
+        '3': ('Lista Aleatória', lambda: random.sample(range(1, tamanho_lista+1), tamanho_lista)),
+        '4': ('Sair', lambda: None)
+    }
+    
     while True:
         print("\n===== HEAP SORT =====")
         print("Escolha o caso para a ordenação Heap Sort:\n")
-        print("1 - Lista Ordenada")
-        print("2 - Lista Ordenada Inversamente")
-        print("3 - Lista Aleatória")
-        print("4 - Sair")
-        opcao = input("\nEscolha -> ").strip().lower()
+        for key, (desc, _) in opcoes.items():
+            print(f"{key} - {desc}")
         
-        if opcao in ['1', 'lista ordenada', 'melhor caso']:
-            return list(range(1, tamanho + 1))
-        elif opcao in ['2', 'lista ordenada inversamente', 'pior caso']:
-            return list(range(tamanho, 0, -1))
-        elif opcao in ['3', 'lista aleatória', 'caso médio']:
-            lista = list(range(1, tamanho + 1))
-            random.shuffle(lista)
-            return lista
-        elif opcao in ['4', 'sair']:
-            print("Saindo do programa.")
-            return None
+        opcao = input("\nEscolha -> ").strip()
+        
+        if opcao in opcoes:
+            return opcoes[opcao][1]()
         else:
-            print("Escolha inválida. Por favor, tente novamente.\n")
+            print("Opção inválida. Tente novamente.")
+
+def limpar_tela():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 if __name__ == "__main__":
-    tamanho_padrao = 40
+    tamanho_lista = 30
     while True:
-        os.system('cls' if os.name == 'nt' else 'clear')
-        
-        lista = obter_dados_ordenacao(tamanho_padrao)
-        
+        limpar_tela()
+        lista = interface(tamanho_lista)
         if lista is not None:
             visualizar_heap_sort(lista)
         else:
-            print("O programa foi encerrado pelo usuário.")
             break
