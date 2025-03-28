@@ -3,87 +3,113 @@ import random
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-def merge_sort(lista, start, end):
-    if end - start > 1:
-        mid = (start + end) // 2
-        yield from merge_sort(lista, start, mid)
-        yield from merge_sort(lista, mid, end)
-        yield from merge(lista, start, mid, end)
+def merge_sort(lista_valores, inicio, fim):
+    if fim - inicio > 1:
+        meio = (inicio + fim) // 2
+        yield from merge_sort(lista_valores, inicio, meio)
+        yield from merge_sort(lista_valores, meio, fim)
+        yield from merge(lista_valores, inicio, meio, fim)
 
-def merge(lista, start, mid, end):
-    left = lista[start:mid]
-    right = lista[mid:end]
-    i = j = 0
-    for k in range(start, end):
-        if i < len(left) and (j >= len(right) or left[i] <= right[j]):
-            lista[k] = left[i]
-            i += 1
+def merge(lista_valores, inicio, meio, fim):
+    # Cria cópias das duas metades a serem mescladas
+    sublista_esquerda = lista_valores[inicio:meio]
+    sublista_direita = lista_valores[meio:fim]
+    # Índices para percorrer as sublistas
+    indice_esquerda = 0
+    indice_direita = 0
+    
+    # Percorre a região da lista original que será substituída
+    for posicao_atual in range(inicio, fim):
+        # Verifica se devemos pegar o próximo elemento da sublista esquerda:
+        # 1. Se ainda houver elementos na sublista esquerda E
+        # 2. Se a sublista direita já acabou OU se o elemento atual da esquerda é menor ou igual ao da direita
+        if indice_esquerda < len(sublista_esquerda) and (indice_direita >= len(sublista_direita) or sublista_esquerda[indice_esquerda] <= sublista_direita[indice_direita]):
+            # Coloca o elemento da sublista esquerda na posição atual
+            lista_valores[posicao_atual] = sublista_esquerda[indice_esquerda]
+            # Avança para o próximo elemento da sublista esquerda
+            indice_esquerda += 1
         else:
-            lista[k] = right[j]
-            j += 1
-        yield lista, start, end
+            # Caso contrário, coloca o elemento da sublista direita na posição atual
+            lista_valores[posicao_atual] = sublista_direita[indice_direita]
+            # Avança para o próximo elemento da sublista direita
+            indice_direita += 1
+        # Retorna o estado atual da lista para visualização
+        yield lista_valores, inicio, fim
 
-def visualize_merge_sort(lista):
-    N = len(lista)
-    fig, ax = plt.subplots()
-    ax.set_title("Merge Sort")
-    bar_rects = ax.bar(range(N), lista, align="edge", color='blue')
-    ax.set_xlim(0, N)
-    ax.set_ylim(0, int(1.1 * N))
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-    text = ax.text(0.02, 0.95, "", transform=ax.transAxes)
-    iteration = [0]
+def visualizar_merge_sort(lista_valores):
+    tamanho_lista = len(lista_valores)
+    figura, grafico = plt.subplots(figsize=(10, 6))
+    grafico.set_title("Visualização do Merge Sort", fontsize=14)
+    barras = grafico.bar(range(tamanho_lista), lista_valores, align="edge", color='skyblue', edgecolor='steelblue')
+    
+    grafico.set_xlim(0, tamanho_lista)
+    grafico.set_ylim(0, int(1.1 * tamanho_lista))
+    grafico.get_xaxis().set_visible(False)
+    grafico.get_yaxis().set_visible(False)
+    
+    texto_contador = grafico.text(0.02, 0.95, "", transform=grafico.transAxes, fontsize=12)
+    contador_operacoes = [0]
 
-    def update_fig(data, rects, iteration):
-        lista, start, end = data
-        for rect, val in zip(rects, lista):
-            rect.set_height(val)
-            rect.set_color('blue')
-        for i in range(start, end):
-            rects[i].set_color('purple')
-        iteration[0] += 1
-        text.set_text("Número de operações: {}".format(iteration[0]))
+    def atualizar_grafico(dados, barras, contador_operacoes):
+        lista_atual, inicio_segmento, fim_segmento = dados
+        
+        for barra, valor in zip(barras, lista_atual):
+            barra.set_height(valor)
+            barra.set_color('skyblue')
+            
+        for indice in range(inicio_segmento, fim_segmento):
+            barras[indice].set_color('purple')
+            
+        contador_operacoes[0] += 1
+        texto_contador.set_text(f"Operações: {contador_operacoes[0]}")
 
-        if lista == sorted(lista):
-            for rect in rects:
-                rect.set_color('green')
+        if lista_atual == sorted(lista_atual):
+            for barra in barras:
+                barra.set_color('limegreen')
 
-    anim = animation.FuncAnimation(fig, func=update_fig,
-                                   fargs=(bar_rects, iteration), frames=merge_sort(lista, 0, len(lista)), interval=50,
-                                   repeat=False)
+    animacao = animation.FuncAnimation(
+        figura, 
+        func=atualizar_grafico,
+        fargs=(barras, contador_operacoes), 
+        frames=merge_sort(lista_valores, 0, len(lista_valores)), 
+        interval=100,
+        repeat=False
+    )
+    
+    plt.tight_layout()
     plt.show()
 
-def get_sorted_data(N):
+def obter_lista_para_ordenacao(tamanho_lista):
+    opcoes = {
+        '1': ('Lista Ordenada', lambda: list(range(1, tamanho_lista+1))),
+        '2': ('Lista Ordenada Inversamente', lambda: list(range(tamanho_lista, 0, -1))),
+        '3': ('Lista Aleatória', lambda: random.sample(range(1, tamanho_lista+1), tamanho_lista)),
+        '4': ('Sair', lambda: None)
+    }
+    
     while True:
-        print("Escolha o caso para a ordenação Merge Sort:\n")
-        print("1 - Lista Ordenada")
-        print("2 - Lista Ordenada Inversamente")
-        print("3 - Lista Aleatoria")
-        print("4 - Sair")
-        case = input("\nEscolha -> ").strip().lower()
+        print("\n===== MERGE SORT =====")
+        print("Escolha o tipo de lista para a ordenação por mesclagem:\n")
+        for key, (desc, _) in opcoes.items():
+            print(f"{key} - {desc}")
         
-        if case == '1' or case == "lista ordenada":
-            return list(range(1, N+1))
-        elif case == '2' or case == "lista ordenada inversamente":
-            return list(range(N, 0, -1))
-        elif case == '3' or case == "lista aleatoria":
-            lista = list(range(1, N+1))
-            random.shuffle(lista)
-            return lista
-        elif case == '4' or case == "sair":
-            print("Saindo do programa.")
-            return None
+        opcao = input("\nEscolha -> ").strip()
+        
+        if opcao in opcoes:
+            return opcoes[opcao][1]()
         else:
-            print("Escolha inválida. Por favor, tente novamente.\n")
+            print("Opção inválida. Tente novamente.")
+
+def limpar_tela():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 if __name__ == "__main__":
-    N = 100
+    tamanho_lista = 50
     while True:
-        os.system('cls')
-        lista = get_sorted_data(N)
-        if lista is not None:
-            visualize_merge_sort(lista)
+        limpar_tela()
+        lista_valores = obter_lista_para_ordenacao(tamanho_lista)
+        if lista_valores is not None:
+            visualizar_merge_sort(lista_valores)
         else:
             print("O programa foi encerrado pelo usuário.")
             break
